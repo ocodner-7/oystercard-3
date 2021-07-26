@@ -10,7 +10,10 @@ class Oystercard
 
   def top_up(number)
   fail "Not topped up, over £#{CARDLIMIT} limit" if (@balance += number) > CARDLIMIT 
-  "test" 
+  #return @balance += number 
   end
 
+  def deduct_from_card(number)
+    return @balance -= number
+  end
 end
