@@ -46,6 +46,13 @@ describe Oystercard do
       expect{my_card_2.touch_in}.to raise_error 'Insufficient funds'
     end
   end
-
-
+  
+  describe '#touch_out' do
+    it "charges correct amount from card" do
+      card = Oystercard.new
+      card.top_up(5)
+      card.touch_in
+      expect {card.touch_out}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
+    end
+  end
 end
