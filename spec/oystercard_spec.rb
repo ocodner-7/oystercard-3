@@ -30,6 +30,7 @@ describe Oystercard do
   describe "#in_journey?" do
     it "tells us if a card is in a journey" do
       my_card = Oystercard.new
+      my_card.top_up(5)
       my_card.touch_in
       expect(my_card).to be_in_journey
     end
@@ -38,10 +39,11 @@ describe Oystercard do
       my_card.touch_out
       expect(my_card).not_to be_in_journey
     end
-    
+
     it 'denies user if their balance is less than £1' do
-      my_card = Oystercard.new 
-      expect(my_card.touch_in).to raise_error 'Insufficient funds'
+      my_card_2 = Oystercard.new 
+      my_card_2.top_up(0.5)
+      expect{my_card_2.touch_in}.to raise_error 'Insufficient funds'
     end
   end
 
