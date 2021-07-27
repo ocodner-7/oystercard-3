@@ -23,5 +23,10 @@ describe Oystercard do
         expect(my_card.deduct_from_card(4)).to eq(1)
       end
     end
+    
+    it 'denies user if their balance is less than £1' do
+      my_card = Oystercard.new 
+      expect(my_card.touch_in).to raise_error 'Insufficient funds'
+    end
   end
 end
