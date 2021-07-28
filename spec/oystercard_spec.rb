@@ -24,7 +24,7 @@ describe Oystercard do
       @my_card = Oystercard.new(:balance => 5)
     end
     it "deducts the balance with the amount stated" do
-      expect{@my_card.touch_out}.to change {@my_card.balance}.by -1
+      expect{@my_card.touch_out("test")}.to change {@my_card.balance}.by -1
     end
   end
   
@@ -38,7 +38,7 @@ describe Oystercard do
       expect(@my_card).to be_in_journey
     end
     it "tells us a card is not in a journey" do
-      @my_card.touch_out
+      @my_card.touch_out("test")
       expect(@my_card).not_to be_in_journey
     end
 
@@ -53,11 +53,11 @@ describe Oystercard do
     end
     it "charges correct amount from card" do
       @card.touch_in("Oxford Circus")
-      expect {@card.touch_out}.to change{@card.balance}.by(-Oystercard::MINIMUM_CHARGE)
+      expect {@card.touch_out("test")}.to change{@card.balance}.by(-Oystercard::MINIMUM_CHARGE)
     end
     it "sets the entry station back to nil" do
       @card.touch_in("Oxford Circus")
-      @card.touch_out
+      @card.touch_out("test")
       expect(@card.entry_station).to eq nil
     end
   end
@@ -72,4 +72,17 @@ describe Oystercard do
     end
   end
 
+  describe "#add_journey" do
+    before(:each) do
+    end
+
+    it "will add and store a journey in history" do
+      card = Oystercard.new(:balance => 10)
+      card.touch_in("Oxford Road")
+      card.touch_out("Manchester Victoria")
+      expect([card.history[0][:entry_station],
+              card.history[0][:exit_station]]
+              ).to(eq ["Oxford Road", "Manchester Victoria"])
+    end
+  end
 end
