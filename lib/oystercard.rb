@@ -1,4 +1,4 @@
-
+require_relative "./station.rb"
 class Oystercard
   CARDLIMIT = 90
   MINIMUM_BALANCE = 1
@@ -17,14 +17,14 @@ class Oystercard
     @balance += number 
   end
   
-  def touch_in(entry_station)
+  def touch_in(station, zone)
     fail 'Insufficient funds' if card_minimum?
-    @entry_station = entry_station
+    @entry_station = Station.new(station, zone)
   end
   
-  def touch_out(station)
+  def touch_out(station, zone)
     deduct(MINIMUM_CHARGE)
-    add_journey(station)
+    add_journey(Station.new(station, zone))
     @entry_station = nil
   end
   
