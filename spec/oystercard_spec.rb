@@ -20,46 +20,45 @@ describe Oystercard do
   end
   
   describe "#deduct_from_card" do
+    before(:each) do
+      @my_card = Oystercard.new(:balance => 5)
+    end
     it "deducts the balance with the amount stated" do
-      my_card = Oystercard.new
-      my_card.top_up(5)
-      expect(my_card.deduct_from_card(4)).to eq(1)
+      expect{@my_card.touch_out}.to change {@my_card.balance}.by -1
     end
   end
   
   describe "#in_journey?" do
+    before(:each) do
+      @my_card = Oystercard.new
+    end
     it "tells us if a card is in a journey" do
-      my_card = Oystercard.new
-      my_card.top_up(5)
-      my_card.touch_in("Oxford Circus")
-      expect(my_card).to be_in_journey
+      @my_card.top_up(5)
+      @my_card.touch_in("Oxford Circus")
+      expect(@my_card).to be_in_journey
     end
     it "tells us a card is not in a journey" do
-      my_card = Oystercard.new
-      my_card.touch_out
-      expect(my_card).not_to be_in_journey
+      @my_card.touch_out
+      expect(@my_card).not_to be_in_journey
     end
 
     it 'denies user if their balance is less than £1' do
-      my_card_2 = Oystercard.new 
-      my_card_2.top_up(0.5)
-      expect{my_card_2.touch_in("Oxford Circus")}.to raise_error 'Insufficient funds'
+      expect{@my_card.touch_in("Oxford Circus")}.to raise_error 'Insufficient funds'
     end
   end
   
   describe '#touch_out' do
+    before(:each) do
+      @card = Oystercard.new(:balance => 5)
+    end
     it "charges correct amount from card" do
-      card = Oystercard.new
-      card.top_up(5)
-      card.touch_in("Oxford Circus")
-      expect {card.touch_out}.to change{card.balance}.by(-Oystercard::MINIMUM_CHARGE)
+      @card.touch_in("Oxford Circus")
+      expect {@card.touch_out}.to change{@card.balance}.by(-Oystercard::MINIMUM_CHARGE)
     end
     it "sets the entry station back to nil" do
-      card = Oystercard.new
-      card.top_up(5)
-      card.touch_in("Oxford Circus")
-      card.touch_out
-      expect(card.entry_station).to eq nil
+      @card.touch_in("Oxford Circus")
+      @card.touch_out
+      expect(@card.entry_station).to eq nil
     end
   end
 
